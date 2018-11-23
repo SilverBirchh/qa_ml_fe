@@ -68,19 +68,26 @@ class _CameraAppState extends State<CameraApp> {
                     ),
                     Positioned(
                       bottom: 0.0,
-                      left: MediaQuery.of(context).size.width / 2,
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            loading = true;
-                          });
-                          this.handlePhoto();
-                        },
-                        child: Container(
-                          child: Icon(
-                            Icons.brightness_1,
-                            color: Colors.blueAccent,
-                            size: 100.0,
+                      left: 0.0,
+                      right: 0.0,
+                      child: Center(
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              loading = true;
+                            });
+                            this.handlePhoto();
+                          },
+                          child: Card(
+                            shape: CircleBorder(),
+                            elevation: 10.0,
+                            child: Container(
+                              child: Icon(
+                                Icons.brightness_1,
+                                color: Colors.blueAccent,
+                                size: 100.0,
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -115,76 +122,126 @@ class _CameraAppState extends State<CameraApp> {
         String entireTotal = Data.totals
             .reduce((value, element) => value + element)
             .toStringAsFixed(2);
-        _scaffoldKey.currentState.showBottomSheet((context) {
-
-
-          return new Container(
-              color: Colors.blueGrey,
+        _scaffoldKey.currentState.showBottomSheet(
+          (context) {
+            return Container(
+              color: Colors.white70,
               height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              margin: EdgeInsets.only(top: 50.0),
               padding: EdgeInsets.only(top: 30.0, left: 10.0, right: 10.0),
               child: Container(
-                child: Center(
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        child: Text(
-                          "Store: $store",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 40.0, color: Colors.black),
-                        ),
-                      ),
-                      Container(
-                        child: Text(
-                          "Total: $total",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 40.0, color: Colors.black),
-                        ),
-                      ),
-                      Container(
-                        child: Text(
-                          "Date: $date",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 40.0, color: Colors.black),
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(top: 30.0),
-                        child: Text(
-                          "Entire Total: $entireTotal",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 50.0, color: Colors.black),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(top: 20.0),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(5.0),
-                          ),
-                        ),
-                        child: RaisedButton(
-                          color: Colors.blue,
-                          padding: EdgeInsets.all(10.0),
-                          onPressed: () {
-                            print('clicked history');
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HistoryScreen()));
-                          },
-                          child: Text(
-                            'History',
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            "Store:",
                             style:
-                                TextStyle(fontSize: 30.0, color: Colors.white),
+                                TextStyle(fontSize: 30.0, color: Colors.black),
                           ),
+                          Spacer(),
+                          Text(
+                            store,
+                            style:
+                                TextStyle(fontSize: 30.0, color: Colors.black),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            "Total:",
+                            style:
+                                TextStyle(fontSize: 30.0, color: Colors.black),
+                          ),
+                          Spacer(),
+                          Text(
+                            '£$total',
+                            style:
+                                TextStyle(fontSize: 30.0, color: Colors.black),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            "Date:",
+                            style:
+                                TextStyle(fontSize: 30.0, color: Colors.black),
+                          ),
+                          Spacer(),
+                          Text(
+                            date,
+                            style:
+                                TextStyle(fontSize: 30.0, color: Colors.black),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(top: 30.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            "Entire Total:",
+                            style:
+                                TextStyle(fontSize: 40.0, color: Colors.black),
+                          ),
+                          Spacer(),
+                          Text(
+                            '£$entireTotal',
+                            style:
+                                TextStyle(fontSize: 40.0, color: Colors.black),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 50.0),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(5.0),
                         ),
                       ),
-                    ],
-                  ),
+                      child: RaisedButton(
+                        color: Colors.blue,
+                        padding: EdgeInsets.all(10.0),
+                        onPressed: () {
+                          print('clicked history');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => HistoryScreen(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          'View History',
+                          style: TextStyle(fontSize: 30.0, color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ));
-        });
+              ),
+            );
+          },
+        );
 
         setState(() {
           loading = false;
