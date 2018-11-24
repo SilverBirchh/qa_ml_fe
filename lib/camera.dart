@@ -9,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import 'data.dart';
 import 'network.dart';
 import 'history.dart';
+import 'receipt.dart';
 
 class CameraApp extends StatefulWidget {
   @override
@@ -108,20 +109,21 @@ class _CameraAppState extends State<CameraApp> {
       streamedResponse.stream.transform(utf8.decoder).listen((value) {
         Map results = json.decode(value);
         print(results);
+
         String store = results['store'];
-        Data.stores.add(store);
-
         String date = results['date'];
-        Data.dates.add(date);
+        dynamic total = results['total'];
 
-        String total = results['total'].toString();
         if (results['total'] is double) {
-          Data.totals.add(results['total']);
+          Data.receipts
+              .add(new Receipt(store: store, date: date, total: total));
         }
 
-        String entireTotal = Data.totals
+        String entireTotal = Data.receipts
+            .map((receipt) => receipt.total)
             .reduce((value, element) => value + element)
             .toStringAsFixed(2);
+
         _scaffoldKey.currentState.showBottomSheet(
           (context) {
             return Container(
