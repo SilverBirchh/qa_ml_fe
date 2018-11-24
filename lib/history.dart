@@ -13,12 +13,69 @@ class HistoryScreen extends StatefulWidget {
 class HistoryScreenState extends State<HistoryScreen> {
   final _historyScaffoldKey = GlobalKey<ScaffoldState>();
 
-  List<Receipt> receipts;
+  List<Receipt> receipts = [];
+
+  List<Widget> listChildren = [];
+
+  createList(List<Receipt> receipts) {
+    List<Widget> children = [];
+
+    receipts.forEach((receipt) {
+      String store = receipt.store;
+      String date = receipt.date;
+      String total = receipt.total.toString();
+
+      Widget child = ListTile(
+        contentPadding: EdgeInsets.all(0.0),
+        title: Container(
+          padding: EdgeInsets.only(bottom: 5.0),
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(color: Colors.black),
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Container(
+                child: Text(
+                  store,
+                  style: TextStyle(
+                      color: Colors.black, fontSize: 20.0),
+                ),
+              ),
+              Container(
+                child: Text(
+                  total,
+                  style: TextStyle(
+                      color: Colors.black, fontSize: 20.0),
+                ),
+              ),
+              Container(
+                child: Text(
+                  date,
+                  style: TextStyle(
+                      color: Colors.black, fontSize: 20.0),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+      children.add(child);
+    });
+
+    setState(() {
+      listChildren = children;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     receipts = []..addAll(Data.receipts);
+    createList(receipts);
   }
 
   @override
@@ -92,53 +149,9 @@ class HistoryScreenState extends State<HistoryScreen> {
               ),
               Container(
                 height: MediaQuery.of(context).size.height,
-                child: ListView.builder(
-                  itemCount: Data.receipts.length,
-                  itemBuilder: (context, index) {
-                    Receipt receipt = receipts[index];
-                    String store = receipt.store;
-                    String date = receipt.date;
-                    String total = receipt.total.toString();
-
-                    return ListTile(
-                        contentPadding: EdgeInsets.all(0.0),
-                        title: Container(
-                          padding: EdgeInsets.only(bottom: 5.0),
-                          decoration: BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(color: Colors.black),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: <Widget>[
-                              Container(
-                                child: Text(
-                                  store,
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 20.0),
-                                ),
-                              ),
-                              Container(
-                                child: Text(
-                                  total,
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 20.0),
-                                ),
-                              ),
-                              Container(
-                                child: Text(
-                                  date,
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 20.0),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ));
-                  },
-                ),
+                child: ListView(
+                  children: listChildren,
+                )
               ),
             ],
           ),
