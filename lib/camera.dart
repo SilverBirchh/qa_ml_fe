@@ -49,12 +49,25 @@ class _CameraAppState extends State<CameraApp> {
 
   @override
   Widget build(BuildContext context) {
-    bool doNotshowCamera =
+    bool doNotShowCamera =
         loading || controller == null || !controller.value.isInitialized;
 
     return Scaffold(
       key: _scaffoldKey,
-      body: doNotshowCamera
+      appBar: AppBar(
+        title: Text('Receipt Scanner'),
+        automaticallyImplyLeading: false,
+        actions: <Widget>[
+          IconButton(
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => HistoryScreen()));
+            },
+            icon: Icon(Icons.history),
+          ),
+        ],
+      ),
+      body: doNotShowCamera
           ? Container(
               child: Center(child: CircularProgressIndicator()),
             )
@@ -63,12 +76,12 @@ class _CameraAppState extends State<CameraApp> {
                 Stack(
                   children: <Widget>[
                     Container(
-                      height: MediaQuery.of(context).size.height,
+                      height: MediaQuery.of(context).size.height - 80.0,
                       width: MediaQuery.of(context).size.width,
                       child: CameraPreview(controller),
                     ),
                     Positioned(
-                      bottom: 0.0,
+                      bottom: 10.0,
                       left: 0.0,
                       right: 0.0,
                       child: Center(
@@ -115,8 +128,9 @@ class _CameraAppState extends State<CameraApp> {
         dynamic total = results['total'];
 
         if (results['total'] is double) {
-          Data.receipts
-              .add(new Receipt(store: store, date: date, total: total));
+          Data.receipts.add(
+            new Receipt(store: store, date: date, total: total),
+          );
         }
 
         String entireTotal = Data.receipts
