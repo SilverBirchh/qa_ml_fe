@@ -1,15 +1,90 @@
 import 'package:flutter/material.dart';
 import 'data.dart';
 import 'camera.dart';
+import 'receipt.dart';
 
-class HistoryScreen extends StatelessWidget {
+class HistoryScreen extends StatefulWidget {
+  @override
+  HistoryScreenState createState() {
+    return new HistoryScreenState();
+  }
+}
+
+class HistoryScreenState extends State<HistoryScreen> {
   final _historyScaffoldKey = GlobalKey<ScaffoldState>();
+
+  List<Receipt> receipts = [];
+
+  List<Widget> listChildren = [];
+
+  createList(List<Receipt> receipts) {
+    List<Widget> children = [];
+
+    receipts.forEach((receipt) {
+      String store = receipt.store;
+      String date = receipt.date;
+      String total = receipt.total.toString();
+
+      Widget child = ListTile(
+        contentPadding: EdgeInsets.all(0.0),
+        title: Container(
+          padding: EdgeInsets.only(bottom: 5.0),
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(color: Colors.black),
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Container(
+                child: Text(
+                  store,
+                  style: TextStyle(
+                      color: Colors.black, fontSize: 20.0),
+                ),
+              ),
+              Container(
+                child: Text(
+                  total,
+                  style: TextStyle(
+                      color: Colors.black, fontSize: 20.0),
+                ),
+              ),
+              Container(
+                child: Text(
+                  date,
+                  style: TextStyle(
+                      color: Colors.black, fontSize: 20.0),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+      children.add(child);
+    });
+
+    setState(() {
+      listChildren = children;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    receipts = []..addAll(Data.receipts);
+    createList(receipts);
+  }
 
   @override
   Widget build(BuildContext context) {
-    String entireTotal = Data.totals
+    String entireTotal = Data.receipts
+        .map((receipt) => receipt.total)
         .reduce((value, element) => value + element)
         .toStringAsFixed(2);
+
     return Scaffold(
       key: _historyScaffoldKey,
       appBar: AppBar(
@@ -74,51 +149,9 @@ class HistoryScreen extends StatelessWidget {
               ),
               Container(
                 height: MediaQuery.of(context).size.height,
-                child: ListView.builder(
-                  itemCount: Data.stores.length,
-                  itemBuilder: (context, index) {
-                    String store = Data.stores[index];
-                    String date = Data.dates[index];
-                    String total = Data.totals[index].toString();
-                    return ListTile(
-                        contentPadding: EdgeInsets.all(0.0),
-                        title: Container(
-                          padding: EdgeInsets.only(bottom: 5.0),
-                          decoration: BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(color: Colors.black),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: <Widget>[
-                              Container(
-                                child: Text(
-                                  store,
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 20.0),
-                                ),
-                              ),
-                              Container(
-                                child: Text(
-                                  total,
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 20.0),
-                                ),
-                              ),
-                              Container(
-                                child: Text(
-                                  date,
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 20.0),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ));
-                  },
-                ),
+                child: ListView(
+                  children: listChildren,
+                )
               ),
             ],
           ),
@@ -130,8 +163,8 @@ class HistoryScreen extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   border: Border(
-                    // top: BorderSide(color: Colors.grey,),
-                  ),
+                      // top: BorderSide(color: Colors.grey,),
+                      ),
                 ),
                 padding: EdgeInsets.all(10.0),
                 width: MediaQuery.of(context).size.width,

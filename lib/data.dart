@@ -1,5 +1,9 @@
+import 'receipt.dart';
+
 class Data {
-  static List<String> stores = [];
-  static List<String> dates = [];
-  static List<double> totals = [];
+  static List<Receipt> receipts = [];
+
+  static double getTotal() {
+
+  }
 }
